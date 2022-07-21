@@ -1,0 +1,45 @@
+1)What is job and step?
+-each job can have multiple steps
+
+
+Step types
+----------
+1)Tasklet step (simple task)
+2)Chunk-Oriented step (reading 1000 lines for eg from csv)
+Chunk step =
+    Item Reader +
+    Item Processor + (not always necessary )
+    Item Writer 
+
+
+
+Different types of item readers present in spring batch (in-build)
+
+Spring batch architecture:
+--------------------------
+
+
+How to create job and step?
+-Job Builder Factory and Step Builder Factory.
+
+Structure(Take diagram from udemy lecture 14)
+-------------------------------------------
+Job
+Job Instances (01 March, 02 March) - one per day
+Job Execution (Store job information like when start end, end time and status) - can happen many times if run was failure.)
+Execution Context
+-----------------
+1)Job Execution Context - to pass data within a job.(to pass data withing steps)
+2)Data stored at the end of job.
+3)Key value pair
+
+
+Step
+Step Execution (Store step information like when start end, end time and status) - can happen many times if run was failure.)
+
+Execution Context
+-----------------
+1)Step Execution Context - to pass data within a step.
+2)Key value pair.
+
+
