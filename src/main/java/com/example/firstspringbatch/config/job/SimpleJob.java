@@ -1,4 +1,4 @@
-package com.example.firstspringbatch.config;
+package com.example.firstspringbatch.config.job;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParametersIncrementer;
@@ -16,8 +16,11 @@ import org.springframework.stereotype.Component;
 
 import com.example.firstspringbatch.listener.FirstJobListener;
 import com.example.firstspringbatch.listener.FirstStepListener;
+import com.example.firstspringbatch.processor.FirstItemProcessor;
+import com.example.firstspringbatch.reader.FirstItemReader;
 import com.example.firstspringbatch.service.FirstTasklet;
 import com.example.firstspringbatch.service.SecondTasklet;
+import com.example.firstspringbatch.writer.FirstItemWriter;
 
 
 @Component
@@ -41,7 +44,16 @@ public class SimpleJob {
 	@Autowired
 	private FirstStepListener firstStepListener;
 	
-	@Bean 
+	@Autowired
+	private FirstItemReader firstItemReader;
+	
+	@Autowired
+	private FirstItemProcessor firstItemProcessor;
+	
+	@Autowired
+	private FirstItemWriter firstItemWriter;
+	
+//	@Bean 
 	public Job firstJob() {
 		return jobBuilderFactory.get("First Job")
 				.incrementer(new RunIdIncrementer())
@@ -73,7 +85,23 @@ public class SimpleJob {
 	
 	
 
+	@Bean
+	public Job secondJob() {
+		return jobBuilderFactory.get("Second Job")
+				.incrementer(new RunIdIncrementer())
+				.start(firstChuckStep())
+				.build();
+	}
 	
+	private Step firstChuckStep() {
+		return stepBuilderFactory.get("First Chuck Step")
+				.<Integer,Long>chunk(3)
+				.reader(firstItemReader)
+				.processor(firstItemProcessor)
+				.writer(firstItemWriter)
+				.build();
+				
+	}
 	
 
 	

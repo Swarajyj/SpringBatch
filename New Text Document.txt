@@ -64,3 +64,7 @@ If one job execution status is complete under a job instance, it will not run wh
 -use RunIdIncrementer() for getting new job parameter everytime.
 
 Question , What is use of RunIdIncrementer()?
+
+In chunk oriented step processor is optional, rest 2 compulsory
+
+We can combine tasklet step and chunk oriented step together in a job.
