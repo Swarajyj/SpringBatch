@@ -43,24 +43,3 @@ Execution Context
 2)Key value pair.
 
 
-
-spring.batch.jdbc.initialize-schema=always
----------------------------------------------
-will look for the table if present, if its present it wont create new tables.
-
-Tables created:
----------------
-BATCH_JOB_INSTANCE - Stores thejob key of instance with job name.
-BATCH_JOB_EXECUTION - Stores the status of job Start_time ,end_time, Status with job instance id.
-BATCH_JOB_EXECUTION_CONTEXT - stores map with job_excution_id.
-BATCH_JOB_EXECUTION_PARAMS - 
-BATCH_STEP_EXECUTION - Stores step name with job_execution_id , start time , end time and status.
-BATCH_STEP_EXECUTION_CONTEXT - Stores map with step_execution_id from BATCH_STEP_EXECUTION.
-
-Note:
------
-If one job execution status is complete under a job instance, it will not run when you try second time(no second job execution).
--To avoid this we can use job parameter, to give unique job instance id.
--use RunIdIncrementer() for getting new job parameter everytime.
-
-Question , What is use of RunIdIncrementer()?

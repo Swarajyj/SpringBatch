@@ -13,6 +13,7 @@ public class FirstTasklet implements Tasklet {
 	public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
 		// TODO Auto-generated method stub
 		System.out.println("this is first tasklet");
+		System.out.println("Printing step execution context values :"+chunkContext.getStepContext().getJobExecutionContext());
 		return RepeatStatus.FINISHED;
 	}
 	
