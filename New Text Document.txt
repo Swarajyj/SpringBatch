@@ -64,7 +64,116 @@ If one job execution status is complete under a job instance, it will not run wh
 -use RunIdIncrementer() for getting new job parameter everytime.
 
 Question , What is use of RunIdIncrementer()?
+Job Listener:
+-------------
+-intercept and excute the job.
 
-In chunk oriented step processor is optional, rest 2 compulsory
+To disable job start during launch
+----------------------------------
+spring.batch.job.enabled=false
 
-We can combine tasklet step and chunk oriented step together in a job.
+
+To enable rest api in spring boot
+---------------------------------
+<artifactId>spring-boot-starter-web</artifactId>
+
+What is used of @Qualifier tag?
+-To resolve ambiguity
+
+@EnableAsync in application.java to enable async behavior in spring boot.
+Mark method as @Async
+
+@Autowired
+JobLauncher
+
+@Scheduled(cron="0 0/1 * 1/1 * ?")- this is put above a method, where it starts job using jobLauncher. This is table from spring scheduler.
+
+
+While invoking job using rest api, we use
+JobService.startJob();
+JobOperator.stop();
+
+use of @value ???
+
+
+Item Readers:
+-------------
+If we use built in item reader , no need to do things like
+1)returning null.
+2)using index i variable.
+
+1)Flat File Item Reader
+--------------------
+FlatFileItemReader.class
+-Source of location
+-Line mapper reads line
+  * Line Tokenizer - (give delimited , column headers)
+  * Bean Mapper - Requires POJO to read from csv.
+  
+JSON Item Reader
+XML Item reader
+JDBC - JdbcUCursorItemReader
+REST API Item Reader.
+
+
+
+  
+-@ConfigurationProperties(prefix = "spring.datasource")
+ * can be used for multiple db.
+ 
+@Primary can be used to select db for storing metadata. 
+
+Fault Tolerence:
+----------------
+Skip policy
+Retry Mechanism
+
+Skip fault record:
+------------------
+.reader().processor().writer().faultTolerant().skip(FlatFileParseException.class).skip(NullPointerException.class).skip(Throwable.class).skipLimit(2) or skipLimit(Interger.MAX_VALUE) or skipPolicy(new AlwaysSkipItemSkipPolicy())
+
+
+
+Capturing bad records in reader
+------------------------------
+
+@Component
+class CustomSkipListener
+
+@SkipInRead
+void skipInRead(Throwable th){
+	if(th instance of FlatFileParseException){
+		
+	}
+
+}
+-use listener
+.reader().processor().writer().faultTolerant().skip(FlatFileParseException.class).listener(skipListener)
+
+
+Capturing bad records in processor
+----------------------------------
+@OnSkipInProcess
+
+
+Capturing bad records in writer
+@OnSkipInWrite
+
+
+Using SkipListenerInterface
+---------------------------
+methods:
+onSkipInRead ,..Write,...Process
+
+
+Retry Mechanism
+----------------
+-This is only applicable processor and writer.
+.reader().processor().writer().faultTolerant().skip(FlatFileParseException.class).listener(skipListener).retryLimit(1).retry(Throwable.class).build()
+
+retryLimit(1).retry(Throwable.class)
+-------------------------------------
+-Retry once if any exception occurs.
+Note: While using rety dont use always skip policy or set skip limit to Interger.MAX_VALUE.It will end in infinte loop.
+* Weired if retry = 3.
+For writer it will be 3 and process = n-1 , ie 2
